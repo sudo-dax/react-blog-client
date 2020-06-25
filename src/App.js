@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import {BrowserRouter, Route} from 'react-router-dom'
+import blogData from './data/post_data'
+import BlogPosts from './components/BlogPosts'
+import BlogPost from './components/BlogPost'
 
-export default () => (
-  <>
-  <div>
+const App = () => {
+  const [blogPosts, setBlogposts] = useState([])
+  useEffect(()=>{
+    setBlogposts(blogData)
+  }, [])
 
-     <h1>Welcome to React Parcel Micro App!</h1>
-    <p>Hard to get more minimal than this React app.</p>
-  
-  </div>
-  </>
-);
+function getPostFromId (id) {
+  console.log(blogPosts)
+  return blogPosts.find((post) => post._id === parseInt(id) )
+}
+
+  return (
+    <div>
+      <BrowserRouter>
+        <h1>Space Time</h1>
+        <Route exact path="/" render={(props) => <BlogPosts {...props} postData={blogPosts} /> } />
+        <Route exact path="/posts/:id" render={(props) => 
+          <BlogPost {...props} post={getPostFromId(props.match.params.id)} /> } />
+      </BrowserRouter>
+    </div>
+    )
+  }
+
+export default App
